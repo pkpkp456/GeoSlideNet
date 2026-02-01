@@ -1,0 +1,520 @@
+\documentclass[10pt]{beamer}
+
+% ================== PACKAGES ==================
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+% ================== THEME ==================
+\usetheme{Madrid}
+
+% ----- GREY TITLE BAR & FOOTER ONLY -----
+\definecolor{mygrey}{RGB}{120,120,120}
+
+% Title bar (frame title)
+\setbeamercolor{frametitle}{fg=white,bg=mygrey}
+
+% Footer (author / title / date line)
+\setbeamercolor{author in head/foot}{fg=white,bg=mygrey}
+\setbeamercolor{title in head/foot}{fg=white,bg=mygrey}
+\setbeamercolor{date in head/foot}{fg=white,bg=mygrey}
+
+% Keep all slide text black
+\setbeamercolor{normal text}{fg=black,bg=white}
+\setbeamercolor{structure}{fg=black}
+
+% ================== TITLE DETAILS ==================
+\title[Landslide Detection]{Landslide Detection Using Deep Learning and Multispectral Satellite Images}
+\author{Geethanjali Javvadi}
+\institute{Department of ECE \\ GVPCEW Madhurawada}
+\date{\today}
+
+% ================== DOCUMENT ==================
+\begin{document}
+	
+	% ---------- TITLE SLIDE ----------
+	\begin{frame}
+		\titlepage
+	\end{frame}
+	% ---------- TABLE OF CONTENTS ----------
+	\begin{frame}{Table Of Contents}
+		\tableofcontents
+	\end{frame}
+	
+	% ---------- PROBLEM STATEMENT ----------
+	\section{Introduction}
+	\begin{frame}{Problem Statement}
+		\begin{itemize}
+			\item Landslides are among the most destructive natural disasters.
+			\item They cause significant loss of:
+			\begin{itemize}
+				\item Human life
+				\item Infrastructure
+				\item Natural resources
+			\end{itemize}
+			\item Accurate landslide detection is challenging due to:
+			\begin{itemize}
+				\item Complex terrain conditions
+				\item Variations in soil, vegetation, and rainfall
+			\end{itemize}
+			\item Traditional landslide identification methods are:
+			\begin{itemize}
+				\item Manual and time-consuming
+				\item Costly and not scalable to large areas
+			\end{itemize}
+		\end{itemize}
+	\end{frame}
+	% ---------- NEED FOR AUTOMATION ----------
+	\begin{frame}{Need for Automation}
+		\begin{itemize}
+			\item Manual landslide monitoring is not feasible for large-scale regions.
+			\item Rapid disaster response requires timely and accurate detection.
+			\item Satellite imagery provides:
+			\begin{itemize}
+				\item Wide-area and remote coverage
+				\item Frequent temporal observations
+				\item Rich spatial and spectral information
+			\end{itemize}
+			\item Deep Learning enables:
+			\begin{itemize}
+				\item Automatic feature extraction
+				\item Improved detection accuracy
+				\item Scalable and reliable analysis
+			\end{itemize}
+		\end{itemize}
+	\end{frame}
+	% ---------- PREVIOUS WORK ----------
+	\section{Previous Work}
+	\begin{frame}{Previous Work}
+		\begin{itemize}
+			\item Early landslide detection relied on:
+			\begin{itemize}
+				\item Manual field surveys
+				\item Visual interpretation of aerial and satellite images
+			\end{itemize}
+			\item Traditional machine learning approaches:
+			\begin{itemize}
+				\item Support Vector Machines (SVM)
+				\item Random Forests
+				\item Logistic Regression
+			\end{itemize}
+			\item Deep learning-based methods:
+			\begin{itemize}
+				\item Convolutional Neural Networks (CNN)
+				\item ResNet and DenseNet architectures
+				\item U-Net for pixel-level landslide segmentation
+			\end{itemize}
+		\end{itemize}
+	\end{frame}
+	% ---------- LIMITATIONS OF PREVIOUS WORK ----------
+	\begin{frame}{Limitations of Previous Work}
+		\begin{itemize}
+			\item Landslide datasets are highly imbalanced:
+			\begin{itemize}
+				\item Very few landslide samples compared to non-landslide samples
+			\end{itemize}
+			\item Existing deep learning models tend to:
+			\begin{itemize}
+				\item Overfit on limited landslide data
+				\item Perform poorly on unseen regions
+			\end{itemize}
+			\item Limited utilization of multispectral satellite information:
+			\begin{itemize}
+				\item Many methods rely mainly on RGB bands
+			\end{itemize}
+			\item Fully connected classifiers are biased toward majority classes.
+		\end{itemize}
+	\end{frame}
+	% ---------- NEED FOR IMPROVEMENT ----------
+	\begin{frame}{Need for Improvement}
+		\begin{itemize}
+			\item An effective landslide detection system should:
+			\begin{itemize}
+				\item Handle severe class imbalance explicitly
+				\item Improve generalization on unseen geographical regions
+			\end{itemize}
+			\item Proper utilization of multispectral satellite data is required:
+			\begin{itemize}
+				\item To capture terrain, soil, and vegetation variations
+			\end{itemize}
+			\item Robust classification methods are needed to:
+			\begin{itemize}
+				\item Reduce bias toward majority classes
+				\item Enhance decision boundaries
+			\end{itemize}
+			\item These requirements motivate the proposed deep learning framework.
+		\end{itemize}
+	\end{frame}
+	% ---------- DATASET DESCRIPTION ----------
+	\section{Dataset Preparation}
+	\begin{frame}{Dataset Description}
+		\begin{itemize}
+			\item Multispectral satellite image dataset used for landslide detection.
+			\item Dataset source:
+			\begin{itemize}
+				\item Downloaded from the \textbf{Zindi Africa} platform
+				\item Obtained by registering for the \textbf{Landslide Detection Competition}
+			\end{itemize}
+			\item Each data sample consists of:
+			\begin{itemize}
+				\item Image size: $64 \times 64$ pixels
+				\item 12 spectral bands per image
+			\end{itemize}
+			\item Data format:
+			\begin{itemize}
+				\item Stored as \texttt{.npy} files
+				\item Represents embeddings of landslide and non-landslide regions
+			\end{itemize}
+			\item Dataset contains two classes:
+			\begin{itemize}
+				\item Landslide
+				\item Non-landslide
+			\end{itemize}
+			\item Significant class imbalance is observed in the dataset.
+		\end{itemize}
+	\end{frame}
+	% ---------- DATASET CHALLENGES ----------
+	\begin{frame}{Challenges in the Dataset}
+		\begin{itemize}
+			\item Severe class imbalance:
+			\begin{itemize}
+				\item Landslide samples are much fewer than non-landslide samples
+			\end{itemize}
+			\item High visual similarity between:
+			\begin{itemize}
+				\item Landslide regions
+				\item Bare soil and rocky terrain
+			\end{itemize}
+			\item Presence of noise due to:
+			\begin{itemize}
+				\item Vegetation cover
+				\item Atmospheric conditions
+			\end{itemize}
+			\item Variations in terrain and geographical conditions across regions.
+		\end{itemize}
+	\end{frame}
+	
+	% ---------- DETAILED METHODOLOGY ----------
+	\section{Methodology}
+	\begin{frame}{Detailed Methodology}
+		\begin{itemize}
+			\item \textbf{Input Data:}
+			\begin{itemize}
+				\item Multispectral satellite images with 12 spectral bands
+				\item Images resized and normalized for uniform processing
+			\end{itemize}
+			
+			\item \textbf{Handling Class Imbalance:}
+			\begin{itemize}
+				\item Offline SMOTE (Synthetic Minority Over-sampling Technique)
+				\item Generates synthetic landslide samples to balance the dataset
+			\end{itemize}
+			
+			\item \textbf{Feature Extraction:}
+			\begin{itemize}
+				\item EfficientNetV2-Large used as backbone CNN
+				\item Modified input layer to support 12-channel images
+				\item Deep features extracted instead of direct classification
+			\end{itemize}
+			
+			\item \textbf{Regularization and Generalization:}
+			\begin{itemize}
+				\item Online data augmentation using MixUp and CutMix
+				\item Reduces overfitting and improves robustness
+			\end{itemize}
+			
+			\item \textbf{Final Classification:}
+			\begin{itemize}
+				\item Support Vector Machine (SVM) applied on extracted features
+				\item Improves decision boundary and minority class performance
+			\end{itemize}
+		\end{itemize}
+	\end{frame}
+% ---------- MODEL ARCHITECTURE (DETAILED OVERVIEW) ----------
+\begin{frame}{Deep Learning Model Architecture}
+	\begin{itemize}
+		\item \textbf{EfficientNetV2-Large} is chosen as the backbone CNN due to its strong performance on image classification tasks.
+		\item It follows a \textbf{compound scaling strategy}:
+		\begin{itemize}
+			\item Balances network depth, width, and resolution
+			\item Achieves higher accuracy with fewer parameters
+		\end{itemize}
+		\item Compared to traditional CNNs:
+		\begin{itemize}
+			\item Faster convergence during training
+			\item Better generalization on unseen data
+		\end{itemize}
+		\item Well-suited for large-scale and high-dimensional image data.
+	\end{itemize}
+\end{frame}
+
+% ---------- MODEL ARCHITECTURE (MULTISPECTRAL ADAPTATION) ----------
+\begin{frame}{Model Adaptation for Multispectral Data}
+	\begin{itemize}
+		\item Original EfficientNetV2 is designed for 3-channel RGB images.
+		\item In this work, the input layer is \textbf{modified to accept 12 channels}:
+		\begin{itemize}
+			\item Allows effective utilization of multispectral satellite information
+			\item Captures terrain, vegetation, and soil characteristics
+		\end{itemize}
+		\item The classification head is removed to:
+		\begin{itemize}
+			\item Extract high-level feature embeddings
+			\item Avoid bias from fully connected layers
+		\end{itemize}
+		\item Extracted deep features are used for robust SVM-based classification.
+	\end{itemize}
+\end{frame}
+
+	
+	% ---------- MODEL ARCHITECTURE (DIAGRAM) ----------
+% ---------- EFFICIENTNETV2-LARGE ARCHITECTURE (UNIT BLOCKS PLACEHOLDER) ----------
+\begin{frame}{EfficientNetV2-Large Architecture with Unit Blocks}
+	\begin{center}
+		% Replace the filename below with your architecture screenshot
+		\includegraphics[width=1\linewidth]{efficientnetv2_architecture.png}
+	\end{center}
+	
+	\vspace{0.3cm}
+	\begin{itemize}
+		\item Architecture consists of stacked \textbf{unit blocks}:
+		\begin{itemize}
+			\item Stem Convolution Block
+			\item Fused-MBConv Blocks
+			\item MBConv Blocks
+			
+		\end{itemize}
+		
+	\end{itemize}
+\end{frame}
+% ---------- HIGH-LEVEL ARCHITECTURE OF PROPOSED FRAMEWORK ----------
+\begin{frame}{High-Level Architecture of Proposed Deep Learning Framework}
+	\begin{center}
+		% Replace with your high-level architecture diagram screenshot
+		\includegraphics[width=1\linewidth]{model_architecture.png}
+	\end{center}
+
+
+\end{frame}
+% ---------- DATA AUGMENTATION & SMOTE (DETAILED) ----------
+\section{Data Augmentation and SMOTE}
+\begin{frame}{Data Augmentation and SMOTE}
+	\begin{itemize}
+		\item The landslide detection dataset exhibits \textbf{severe class imbalance}:
+		\begin{itemize}
+			\item Landslide samples are significantly fewer than non-landslide samples
+			\item This bias negatively affects model learning and minority class prediction
+		\end{itemize}
+		
+		\item \textbf{Offline SMOTE (Synthetic Minority Over-sampling Technique)} is employed:
+		\begin{itemize}
+			\item Generates synthetic samples for the landslide class
+			\item Operates in feature space to avoid simple duplication
+			\item Improves class balance before training begins
+		\end{itemize}
+		
+		\item \textbf{Online Data Augmentation} is applied during training:
+		\begin{itemize}
+			\item \textbf{MixUp}: Combines pairs of images and labels to smooth decision boundaries
+			\item \textbf{CutMix}: Replaces regions of one image with another to improve localization
+			\item \textbf{Intensity transformations}: Handle illumination and spectral variations
+			\item \textbf{Geometric transformations}: Improve invariance to rotation and flipping
+		\end{itemize}
+		
+		\item The combined use of SMOTE and augmentation:
+		\begin{itemize}
+			\item Reduces overfitting
+			\item Enhances model robustness
+			\item Improves minority (landslide) class performance
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+% ---------- SMOTE VISUALIZATION ----------
+\begin{frame}{SMOTE Visualization and Class Distribution}
+	\begin{figure}
+		\centering
+		% ----------- (a) SMOTE SAMPLE GENERATION -----------
+		\includegraphics[width=0.9\linewidth]{smote_generation_example.png}
+		\caption*{\textbf{(a)} Left: Anchor images \quad Middle: Nearest neighbors \quad Right: SMOTE-generated samples\newline \textbf{(b)} Class distribution on the training subset after applying the SMOTE algorithm}
+	\end{figure}
+\end{frame}
+% ---------- TRAINING SETUP ----------
+\section{Training Setup}
+\begin{frame}{Training Setup}
+	\begin{itemize}
+		\item \textbf{Backbone Network:} EfficientNetV2-Large
+		\item \textbf{Input:}
+		\begin{itemize}
+			\item Multispectral images of size $64 \times 64$
+			\item 12 spectral channels
+		\end{itemize}
+		\item \textbf{Training Configuration:}
+		\begin{itemize}
+			\item Optimizer: Adam
+			\item Initial Learning Rate: $3 \times 10^{-4}$
+			\item Learning Rate Scheduler: Cosine Annealing
+			\item Batch Size: 8
+			\item Number of Epochs: 50
+		\end{itemize}
+		\item \textbf{Loss Function:}
+		\begin{itemize}
+			\item KL-Divergence loss with soft labels from MixUp/CutMix
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+% ---------- TRAINING PIPELINE DIAGRAM ----------
+
+\begin{frame}{Training Pipeline of the Proposed Framework}
+	\begin{center}
+		% Replace the filename with the generated pipeline diagram image
+		\includegraphics[width=1\linewidth]{Training_pipeline.png}
+	\end{center}
+	
+\end{frame}
+% ---------- FINAL RESULTS ----------
+\begin{frame}{Final Performance Results}
+	\begin{itemize}
+		\item The proposed deep learning framework achieves strong performance on the landslide detection task.
+		\item Final evaluation metrics obtained:
+	\end{itemize}
+	
+	\vspace{0.3cm}
+	
+	\begin{center}
+		\begin{tabular}{|l|c|}
+			\hline
+			\textbf{Metric} & \textbf{Value} \\
+			\hline
+			Accuracy   & 0.9897 \\
+			Precision  & 0.9987 \\
+			Recall     & 0.9545 \\
+			F1-score   & 0.9761 \\
+			Training Loss & 0.1315 \\
+			\hline
+		\end{tabular}
+	\end{center}
+	
+	\vspace{0.3cm}
+	
+	\begin{itemize}
+		\item High precision indicates very few false positives.
+		\item Strong F1-score shows balanced performance on imbalanced data.
+		\item Low loss confirms stable and effective model convergence.
+	\end{itemize}
+\end{frame}
+
+% =========================================================
+% DETAILED RESULTS ANALYSIS SLIDES
+% (USING GENERATED PERFORMANCE GRAPHS)
+% =========================================================
+
+% ---------- ACCURACY VS EPOCH ----------
+\begin{frame}{Accuracy vs Epoch}
+	\begin{center}
+		\includegraphics[width=0.85\linewidth]{accuracy_vs_epoch.png}
+	\end{center}
+	
+	\vspace{0.3cm}
+	\begin{itemize}
+		\item Shows the progression of model accuracy over training epochs.
+		\item Accuracy increases steadily as training progresses.
+		\item Indicates effective learning and convergence of the model.
+		\item High final accuracy demonstrates strong classification capability.
+	\end{itemize}
+\end{frame}
+
+% ---------- LOSS VS EPOCH ----------
+\begin{frame}{Training Loss vs Epoch}
+	\begin{center}
+		\includegraphics[width=0.85\linewidth]{loss_vs_epoch.png}
+	\end{center}
+	
+	\vspace{0.3cm}
+	\begin{itemize}
+		\item Represents the variation of training loss during learning.
+		\item Loss decreases consistently with increasing epochs.
+		\item Confirms stable optimization and absence of training instability.
+		\item Final low loss value indicates good model convergence.
+	\end{itemize}
+\end{frame}
+
+% ---------- ACCURACY VS LOSS ----------
+\begin{frame}{Accuracy vs Loss}
+	\begin{center}
+		\includegraphics[width=0.85\linewidth]{accuracy_vs_loss.png}
+	\end{center}
+	
+	\vspace{0.3cm}
+	\begin{itemize}
+		\item Illustrates the inverse relationship between accuracy and loss.
+		\item As loss decreases, classification accuracy improves.
+		\item Demonstrates consistency between optimization objective and performance.
+		\item Validates correctness of the training process.
+	\end{itemize}
+\end{frame}
+
+% ---------- FINAL METRICS VISUALIZATION ----------
+\section{Results}
+\begin{frame}{Final Evaluation Metrics}
+	\begin{center}
+		\includegraphics[width=0.75\linewidth]{final_metrics.png}
+	\end{center}
+	
+	\vspace{0.3cm}
+	\begin{itemize}
+		\item Summarizes final performance metrics of the proposed model.
+		\item High precision indicates very low false positive rate.
+		\item Strong recall shows effective detection of landslide regions.
+		\item Balanced F1-score confirms robustness on imbalanced data.
+	\end{itemize}
+\end{frame}
+
+% ---------- PERFORMANCE INTERPRETATION ----------
+\begin{frame}{Performance Interpretation}
+	\begin{itemize}
+		\item Accuracy of \textbf{98.97\%} demonstrates excellent overall performance.
+		\item Precision of \textbf{99.87\%} indicates reliable landslide predictions.
+		\item Recall of \textbf{95.45\%} confirms effective minority class detection.
+		\item Low training loss of \textbf{0.1315} reflects stable convergence.
+		\item Results validate the effectiveness of SMOTE and data augmentation.
+	\end{itemize}
+\end{frame}
+
+% ---------- SUMMARY OF RESULTS ----------
+\begin{frame}{Results Summary}
+	\begin{itemize}
+		\item Proposed deep learning framework achieves high accuracy and robustness.
+		\item Class imbalance handling significantly improves minority class performance.
+		\item EfficientNetV2 effectively extracts discriminative multispectral features.
+		\item The framework is suitable for real-world landslide detection tasks.
+	\end{itemize}
+\end{frame}
+% ---------- CONCLUSION ----------
+\section{Conclusion}
+\begin{frame}{Conclusion}
+	\begin{itemize}
+		\item This work presented a deep-learning framework for landslide detection using multispectral satellite imagery.
+		\item The proposed approach integrates:
+		\begin{itemize}
+			\item EfficientNetV2-Large for robust deep feature extraction
+			\item Support Vector Machine (SVM) for improved final classification
+		\end{itemize}
+		\item Class imbalance was effectively addressed using:
+		\begin{itemize}
+			\item Offline SMOTE-based data augmentation
+			\item Online augmentation techniques during training
+		\end{itemize}
+		\item Extensive experimentation demonstrated that:
+		\begin{itemize}
+			\item The combination of deep learning, augmentation, and SVM post-processing significantly improves performance
+			\item The proposed framework achieves a high F1-score and reliable generalization
+		\end{itemize}
+		\item Overall, the results confirm the effectiveness of the proposed method for accurate and robust landslide detection in complex environments.
+	\end{itemize}
+\end{frame}
+
+
+	
+\end{document}
