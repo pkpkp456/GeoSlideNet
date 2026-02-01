@@ -1,0 +1,28 @@
+# Core Python
+numpy
+scipy
+pandas
+
+# Machine Learning
+scikit-learn
+imbalanced-learn
+joblib
+
+# Deep Learning
+tensorflow>=2.10
+torch
+torchvision
+timm
+
+# Image Processing
+Pillow
+opencv-python
+rasterio
+
+# Visualization
+matplotlib
+seaborn
+
+# Notebooks
+jupyter
+ipykernel

@@ -1,4 +1,4 @@
-# LandslideNet-EfficientNet-SVM
+# GeoSlideNet: A Hybrid EfficientNetV2–SVM Framework for Landslide Detection
 
 ## Landslide Detection Using EfficientNetV2 and SVM
 
