@@ -1,33 +1,36 @@
 # ===============================
-# DATASET (DO NOT UPLOAD)
+# DATASETS (NEVER UPLOAD)
 # ===============================
 Dataset/
+dataset/
+data/
+*.csv
+*.zip
 *.tif
 *.TIF
-*.zip
-*.tar
-*.gz
 *.hdf5
-*.csv
-*.pdf
+*.npy
 
 # ===============================
-# PYTHON / NOTEBOOK CACHE
+# NOTEBOOK CACHE
 # ===============================
+.ipynb_checkpoints/
 __pycache__/
 *.pyc
-.ipynb_checkpoints/
 
 # ===============================
-# TEMP / SYSTEM
+# LATEX / BUILD FILES
 # ===============================
-.temp/
-__temp__/
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.synctex.gz
+
+# ===============================
+# SYSTEM
+# ===============================
 .DS_Store
 Thumbs.db
-
-# ===============================
-# ENV
-# ===============================
-.env
-venv/
